@@ -1,0 +1,26 @@
+---
+language: generic
+sudo: required
+services:
+  - docker
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION=1.17.1
+  matrix:
+    - OS=jessie64 SERVER=minecraft PROCESS_CONTROL=systemd
+    - OS=jessie64 SERVER=minecraft PROCESS_CONTROL=supervisor
+    - OS=trusty64 SERVER=minecraft PROCESS_CONTROL=supervisor
+    - OS=xenial64 SERVER=minecraft PROCESS_CONTROL=systemd
+    - OS=centos7  SERVER=minecraft PROCESS_CONTROL=systemd
+    - OS=jessie64 SERVER=spigot    PROCESS_CONTROL=systemd
+    - OS=jessie64 SERVER=spigot    PROCESS_CONTROL=supervisor
+    - OS=xenial64 SERVER=spigot    PROCESS_CONTROL=systemd
+    - OS=centos7  SERVER=spigot    PROCESS_CONTROL=systemd
+before_install:
+  - sudo -E ./scripts/install-docker.sh
+install: true
+script:
+  - make "${OS}" test
+notifications:
+  email: false
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
